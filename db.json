@@ -1,0 +1,7 @@
+{
+    "shipments": [
+      { "id": 1, "trackingNumber": "ABC123", "status": "In Transit" },
+      { "id": 2, "trackingNumber": "DEF456", "status": "Delivered" }
+    ]
+  }
+  

@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function App() {
+const App = () => {
+  const [trackingNumber, setTrackingNumber] = useState('');
+  const [shipment, setShipment] = useState(null);
+  const [error, setError] = useState('');
+
+  const handleTrack = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/shipments?trackingNumber=${trackingNumber}`);
+      if (response.data.length > 0) {
+        setShipment(response.data[0]);
+        setError('');
+      } else {
+        setShipment(null);
+        setError('Shipment not found');
+      }
+    } catch (error) {
+      console.error('Error tracking shipment:', error);
+      setError('Error tracking shipment');
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Courier Tracking</h1>
+      <input
+        type="text"
+        value={trackingNumber}
+        onChange={(e) => setTrackingNumber(e.target.value)}
+      />
+      <button onClick={handleTrack}>Track</button>
+      {error && <p>{error}</p>}
+      {shipment && (
+        <div>
+          <h2>Shipment Information</h2>
+          <p>Tracking Number: {shipment.trackingNumber}</p>
+          <p>Status: {shipment.status}</p>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
